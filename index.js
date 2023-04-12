@@ -9,29 +9,24 @@ app.use(
 );
 app.use("/", async (req, res) => {
   let query = req.query;
-
-  console.log(query);
   let myurl = new URL("https://muerp.mahindrauniversity.edu.in/markAtt.json");
   const params = myurl.searchParams;
-  console.log(query.at);
-  console.log(query.ld);
   params.append("at", query.at);
   params.append("ld", query.ld);
-  if (!id && !ld) {
+  if (!query.at || !query.ld) {
+    console.log("data not provided" + " " + query.at);
     return res.status(400).json({ err: "data not provided" });
   }
-
   try {
-    console.log(myurl.toString());
     const response = await axios.get(myurl.toString());
-    console.log(response.data + " " + id);
+    console.log(JSON.stringify({ ...response.data, id: query.at }));
     // if (!response.ok) {
     //   return res.status(200).json();
     // } else {
     // const data = await response.json();
     return res.status(200).json(response.data);
   } catch (err) {
-    console.log(err + " " + id);
+    console.log(err + " " + "id:" + query.at);
     return res.status(400).json(err);
   }
 });
