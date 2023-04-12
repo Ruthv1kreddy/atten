@@ -17,18 +17,21 @@ app.use("/", async (req, res) => {
   console.log(query.ld);
   params.append("at", query.at);
   params.append("ld", query.ld);
+  if (!id && !ld) {
+    return res.status(400).json({ err: "data not provided" });
+  }
 
   try {
     console.log(myurl.toString());
     const response = await axios.get(myurl.toString());
-    console.log(response);
+    console.log(response.data + " " + id);
     // if (!response.ok) {
     //   return res.status(200).json();
     // } else {
     // const data = await response.json();
     return res.status(200).json(response.data);
   } catch (err) {
-    console.log(err);
+    console.log(err + " " + id);
     return res.status(400).json(err);
   }
 });
